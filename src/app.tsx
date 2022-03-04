@@ -2,6 +2,7 @@ import * as React from "react";
 
 const STARTING_AGE = 6570;
 const STARTING_DATE = new Date(2018, 1, 1);
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 interface MoneyState {
   balance: number;
@@ -58,7 +59,7 @@ const App = () => {
 
     setGameState({
       ...gameState,
-      date: new Date(gameState.date.getDate() + 86400)
+      date: new Date(gameState.date.getTime() + (86400000 * 3))
     })
   };
 
@@ -67,12 +68,17 @@ const App = () => {
       ...moneyState,
       balance: moneyState.balance + moneyState.activeIncome,
     });
+
+    setGameState({
+      ...gameState,
+      date: new Date(gameState.date.getTime() + (86400000 * 6))
+    })
   };
 
   return (
     <div>
       <p>Balance: ${moneyState.balance}</p>
-      <button onClick={handleWorkButtonPress}>Work</button>
+      <button onClick={handleWorkButtonPress}>Work Overtime</button>
       <PlayerInfo
         name={playerState.name}
         daysOld={playerState.daysOld}
@@ -102,6 +108,7 @@ const GameInfo = (props: GameInfoProps) => {
   return (
     <div id="GameInfoPanel">
       <p>Current Date: {props.currentDate.toDateString()}</p>
+      <p>Current Date: {months[props.currentDate.getMonth()]} {props.currentDate.getFullYear()}</p>
     </div>
   );
 };
