@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as CSS from 'csstype';
 
 const STARTING_AGE = 6570;
 const STARTING_DATE = new Date(2018, 1, 1);
@@ -12,7 +13,6 @@ interface MoneyState {
 
 interface PlayerState {
   name: string;
-  daysOld: number;
 }
 
 interface GameState {
@@ -24,8 +24,8 @@ const App = () => {
 
   const [moneyState, setMoneyState] = React.useState({
     balance: 0,
-    passiveIncome: 1,
-    activeIncome: 1,
+    passiveIncome: 2,
+    activeIncome: 10,
   });
 
   const [playerState, setPlayerState] = React.useState({
@@ -77,26 +77,58 @@ const App = () => {
 
   return (
     <div>
-      <p>Balance: ${moneyState.balance}</p>
-      <button onClick={handleWorkButtonPress}>Work Overtime</button>
+      <EconomyInfo playerBalance={moneyState.balance}
+        activeIncome={moneyState.activeIncome}
+        passiveIncome={moneyState.passiveIncome}></EconomyInfo>
       <PlayerInfo
         name={playerState.name}
-        daysOld={playerState.daysOld}
+        yearsOld={(gameState.date.getFullYear() - 2000)}
       />
       <GameInfo currentDate={gameState.date}></GameInfo>
+      <button onClick={handleWorkButtonPress}>Work Overtime</button>
     </div>
   );
 };
 
+interface EconomyInfoProps {
+  playerBalance: number
+  passiveIncome: number,
+  activeIncome: number
+}
+const EconomyInfo = (props: EconomyInfoProps) => {
+
+  const economyInfoPanelStyle: CSS.Properties = {
+    borderRadius: "1px",
+    borderStyle: "solid"
+  }
+
+  return (
+    <div id="EconomyInfoPanel" style={economyInfoPanelStyle}>
+      <h2>Economy Info</h2>
+      <p>Balance: ${props.playerBalance}</p>
+      <p>Passive Income: ${props.passiveIncome}</p>
+      <p>Active Income: ${props.activeIncome}</p>
+    </div>
+  );
+};
+
+
 interface PlayerInfoProps {
   name: string;
-  daysOld: number;
+  yearsOld: number;
 }
 const PlayerInfo = (props: PlayerInfoProps) => {
+
+  const playerInfoPanelStyle: CSS.Properties = {
+    borderRadius: "1px",
+    borderStyle: "solid"
+  }
+
   return (
-    <div id="PlayerInfoPanel">
+    <div id="PlayerInfoPanel" style={playerInfoPanelStyle}>
+      <h2>Player Info</h2>
       <p>Name: {props.name}</p>
-      <p>{Math.round(props.daysOld / 365)} Years Old</p>
+      <p>{Math.round(props.yearsOld)} Years Old</p>
     </div>
   );
 };
@@ -105,9 +137,15 @@ interface GameInfoProps {
   currentDate: Date;
 }
 const GameInfo = (props: GameInfoProps) => {
+
+  const gameInfoPanelStyle: CSS.Properties = {
+    borderRadius: "1px",
+    borderStyle: "solid"
+  }
+
   return (
-    <div id="GameInfoPanel">
-      <p>Current Date: {props.currentDate.toDateString()}</p>
+    <div id="GameInfoPanel" style={gameInfoPanelStyle}>
+      <h2>Game Info</h2>
       <p>Current Date: {months[props.currentDate.getMonth()]} {props.currentDate.getFullYear()}</p>
     </div>
   );
