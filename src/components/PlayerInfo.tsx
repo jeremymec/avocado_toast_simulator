@@ -4,6 +4,7 @@ import * as CSS from 'csstype';
 interface PlayerInfoProps {
   name: string;
   yearsOld: number;
+  wellbeing: number;
 }
 export const PlayerInfo = (props: PlayerInfoProps) => {
 
@@ -17,6 +18,26 @@ export const PlayerInfo = (props: PlayerInfoProps) => {
       <h2>Player Info</h2>
       <p>Name: {props.name}</p>
       <p>{Math.round(props.yearsOld)} Years Old</p>
+      <p>{props.wellbeing} Wellbeing Score ({wellbeingStringFromScore(props.wellbeing)})</p>
     </div>
   );
 };
+
+const wellbeingStringFromScore = (score: number): string => {
+  if (score >= 50) {
+    return "Thriving";
+  }
+  if (score >= 40) {
+    return "Content";
+  }
+  if (score >= 30) {
+    return "Mixed";
+  }
+  if (score >= 20) {
+    return "Struggling";
+  }
+  if (score >= 10) {
+    return "Unstable";
+  }
+  return "Mental Breakdown";
+}

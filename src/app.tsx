@@ -30,6 +30,8 @@ interface MoneyState {
 
 interface PlayerState {
   name: string;
+  daysOld: number;
+  wellbeing: number;
 }
 
 interface GameState {
@@ -40,22 +42,23 @@ const App = () => {
   const [time, setTime] = React.useState(Date.now());
   const [gameEvents, setGameEvents] = React.useState(game_events);
 
-  const [moneyState, setMoneyState] = React.useState({
+  const [moneyState, setMoneyState] = React.useState<MoneyState>({
     balance: 0,
     passiveIncome: 2,
     activeIncome: 10,
   });
 
-  const [playerState, setPlayerState] = React.useState({
+  const [playerState, setPlayerState] = React.useState<PlayerState>({
     name: "Bob Ross",
     daysOld: STARTING_AGE,
+    wellbeing: 50
   });
 
-  const [gameState, setGameState] = React.useState({
+  const [gameState, setGameState] = React.useState<GameState>({
     date: STARTING_DATE,
   });
 
-  const [messages, setMessages] = React.useState([
+  const [messages, setMessages] = React.useState<string[]>([
     "Welcome to Avocado Toast"
   ])
 
@@ -152,6 +155,7 @@ const App = () => {
       <PlayerInfo
         name={playerState.name}
         yearsOld={gameState.date.getFullYear() - 2000}
+        wellbeing={playerState.wellbeing}
       />
       <GameInfo currentDate={gameState.date}></GameInfo>
       <MessageLog messages={messages}></MessageLog>
