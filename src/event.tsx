@@ -1,14 +1,10 @@
+import { Action } from "./app";
+
 export interface Event {
     trigger?: "time" | "money" | "wellbeing",
     polarity?: "above" | "below",
     threshold?: number,
     actions: Action[]
-}
-
-export interface Action {
-    message?: string,
-    target?: "money" | "inflation" | "wellbeing",
-    mod?: number
 }
 
 export const game_events: Event[] = [
@@ -18,7 +14,8 @@ export const game_events: Event[] = [
         threshold: 100,
         actions: [
             {
-                message: "Your first band!"
+                message: "Your first band!",
+                effect: () => {}
             }
         ]
     }

@@ -2,8 +2,10 @@ import * as React from "react";
 import { EconomyInfo } from "./components/EconomyInfo";
 import { PlayerInfo } from "./components/PlayerInfo";
 import { GameInfo } from "./components/GameInfo";
-import { game_events, Action, Event } from "./event";
+import { game_events, Event } from "./event";
 import { MessageLog } from "./components/MessageLog";
+import { Upgrades } from "./components/Upgrades";
+import { upgrades, Upgrade } from "./upgrade";
 
 const STARTING_AGE = 6570;
 const STARTING_DATE = new Date(2018, 1, 1);
@@ -22,25 +24,40 @@ export const months = [
   "December",
 ];
 
-interface MoneyState {
+export interface MoneyState {
   balance: number;
   passiveIncome: number;
   activeIncome: number;
 }
 
-interface PlayerState {
+export interface PlayerState {
   name: string;
   daysOld: number;
   wellbeing: number;
 }
 
-interface GameState {
+export interface GameState {
   date: Date;
+}
+
+export interface Action {
+  message?: string;
+  effect: (
+    moneyState: MoneyState,
+    setMoneyState: React.Dispatch<React.SetStateAction<MoneyState>>,
+    playerState: PlayerState,
+    setPlayerState: React.Dispatch<React.SetStateAction<PlayerState>>,
+    gameState: GameState,
+    setGameState: React.Dispatch<React.SetStateAction<GameState>>
+  ) => void;
 }
 
 const App = () => {
   const [time, setTime] = React.useState(Date.now());
   const [gameEvents, setGameEvents] = React.useState(game_events);
+  const [availableUpgrades, setAvailableUpgrades] = React.useState<Upgrade[]>([]);
+
+  let upgradePool = new Array(...upgrades);
 
   const [moneyState, setMoneyState] = React.useState<MoneyState>({
     balance: 0,
@@ -51,7 +68,7 @@ const App = () => {
   const [playerState, setPlayerState] = React.useState<PlayerState>({
     name: "Bob Ross",
     daysOld: STARTING_AGE,
-    wellbeing: 50
+    wellbeing: 50,
   });
 
   const [gameState, setGameState] = React.useState<GameState>({
@@ -59,14 +76,15 @@ const App = () => {
   });
 
   const [messages, setMessages] = React.useState<string[]>([
-    "Welcome to Avocado Toast"
-  ])
+    "Welcome to Avocado Toast",
+  ]);
 
   // Call update function every second
   React.useEffect(() => {
     const interval = setInterval(() => setTime(Date.now()), 1000);
     updateState();
     processEvents();
+    appendAvailableUpgrades();
     return () => {
       clearInterval(interval);
     };
@@ -90,12 +108,12 @@ const App = () => {
   };
 
   const processEvents = () => {
-    const triggered_events = []
+    const triggered_events = [];
 
-    console.log('Game events', gameEvents);
+    console.log("Game events", gameEvents);
 
     for (let game_event of gameEvents) {
-      console.log('####' + game_event);
+      console.log("####" + game_event);
       switch (game_event.trigger) {
         case "money":
           if (
@@ -109,29 +127,47 @@ const App = () => {
       }
     }
 
-    const updateEvents = (events: Event[]) => gameEvents.filter((event) => {
-      return !events.includes(event);
-    });
+    const updateEvents = (events: Event[]) =>
+      gameEvents.filter((event) => {
+        return !events.includes(event);
+      });
 
     setGameEvents(updateEvents(triggered_events));
-    console.log('Game events updated', gameEvents);
+    console.log("Game events updated", gameEvents);
   };
 
   const executeActions = (actions: Action[]) => {
     for (let action of actions) {
-      switch (action.target) {
-        case "money":
-          setMoneyState({
-            ...moneyState,
-            balance: moneyState.balance + (action.mod ?? 0)
-          });
-      }
-      if (action.message) {
-        setMessages([...messages, action.message]);
+      action.effect(
+        moneyState,
+        setMoneyState,
+        playerState,
+        setPlayerState,
+        gameState,
+        setGameState
+      );
+    }
+  };
+
+  const appendAvailableUpgrades = () => {
+    const upgrades_to_remove: Upgrade[] = []
+
+    for (let upgrade of upgradePool) {
+      if (upgrade.is_available(
+        moneyState,
+        setMoneyState,
+        playerState,
+        setPlayerState, 
+        gameState,
+        setGameState
+      )) {
+        setAvailableUpgrades([...availableUpgrades, upgrade]);
+        upgrades_to_remove.push(upgrade);
       }
     }
 
-  };
+    upgradePool = upgradePool.filter(upgrade => !upgrades_to_remove.includes(upgrade));
+  }
 
   const handleWorkButtonPress = () => {
     setMoneyState({
@@ -159,6 +195,7 @@ const App = () => {
       />
       <GameInfo currentDate={gameState.date}></GameInfo>
       <MessageLog messages={messages}></MessageLog>
+      <Upgrades avaliableUpgrades={availableUpgrades}></Upgrades>
       <button onClick={handleWorkButtonPress}>Work Overtime</button>
     </div>
   );

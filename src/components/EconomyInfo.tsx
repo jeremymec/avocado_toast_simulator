@@ -18,7 +18,7 @@ export const EconomyInfo = (props: EconomyInfoProps) => {
       <h2>Economy Info</h2>
       <p>Balance: ${props.playerBalance}</p>
       <p>Passive Income: ${props.passiveIncome}</p>
-      <p>Active Income: ${props.activeIncome}</p>
+      <p>Overtime Bonus: ${props.activeIncome}</p>
     </div>
   );
 };
