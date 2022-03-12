@@ -3,6 +3,7 @@ import { MoneyState, PlayerState, GameState } from "./app";
 
 export interface Upgrade {
   name: string;
+  description: string;
   wellbeing_cost: number;
   actions: Action[];
   is_available: (moneyState: MoneyState,
@@ -16,10 +17,11 @@ export interface Upgrade {
 export const upgrades: Upgrade[] = [
   {
     name: "Job: Office Clerk",
+    description: "+$50 Passive Income\n",
     wellbeing_cost: 5,
     actions: [
       {
-        message: "Congratulations! You got your first job at Generic Co.",
+        messages: ["Congratulations! You got your first job at Generic Co."],
         effect: (m, setM, p, setP, g, setG) => {
           setM({
             ...m,

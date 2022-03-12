@@ -14,7 +14,7 @@ export const game_events: Event[] = [
         threshold: 100,
         actions: [
             {
-                message: "Your first band!",
+                messages: ["Your first band!"],
                 effect: () => {}
             }
         ]

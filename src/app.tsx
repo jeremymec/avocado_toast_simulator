@@ -41,7 +41,7 @@ export interface GameState {
 }
 
 export interface Action {
-  message?: string;
+  messages: string[];
   effect: (
     moneyState: MoneyState,
     setMoneyState: React.Dispatch<React.SetStateAction<MoneyState>>,
@@ -55,9 +55,9 @@ export interface Action {
 const App = () => {
   const [time, setTime] = React.useState(Date.now());
   const [gameEvents, setGameEvents] = React.useState(game_events);
-  const [availableUpgrades, setAvailableUpgrades] = React.useState<Upgrade[]>([]);
 
-  let upgradePool = new Array(...upgrades);
+  const [availableUpgrades, setAvailableUpgrades] = React.useState<Upgrade[]>([]);
+  const [upgradePool, setUpgradePool] = React.useState<Upgrade[]>([...upgrades]);
 
   const [moneyState, setMoneyState] = React.useState<MoneyState>({
     balance: 0,
@@ -146,6 +146,9 @@ const App = () => {
         gameState,
         setGameState
       );
+      for (let message of action.messages) {
+        setMessages([...messages, message])
+      }
     }
   };
 
@@ -166,7 +169,7 @@ const App = () => {
       }
     }
 
-    upgradePool = upgradePool.filter(upgrade => !upgrades_to_remove.includes(upgrade));
+    setUpgradePool(upgradePool.filter(upgrade => !upgrades_to_remove.includes(upgrade)));
   }
 
   const handleWorkButtonPress = () => {
@@ -180,6 +183,15 @@ const App = () => {
       date: new Date(gameState.date.getTime() + 86400000 * 6),
     });
   };
+
+  const handleUpgradePurchase = (upgrade: Upgrade) => {
+    executeActions(upgrade.actions);
+    setPlayerState({
+      ...playerState,
+      wellbeing: playerState.wellbeing - upgrade.wellbeing_cost
+    });
+    setAvailableUpgrades(availableUpgrades.filter(upgrade => upgrade !== upgrade));
+  }
 
   return (
     <div>
@@ -195,7 +207,7 @@ const App = () => {
       />
       <GameInfo currentDate={gameState.date}></GameInfo>
       <MessageLog messages={messages}></MessageLog>
-      <Upgrades avaliableUpgrades={availableUpgrades}></Upgrades>
+      <Upgrades avaliableUpgrades={availableUpgrades} upgradeCallback={handleUpgradePurchase}></Upgrades>
       <button onClick={handleWorkButtonPress}>Work Overtime</button>
     </div>
   );
