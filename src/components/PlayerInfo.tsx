@@ -5,6 +5,7 @@ interface PlayerInfoProps {
   name: string;
   yearsOld: number;
   wellbeing: number;
+  energy: number;
 }
 export const PlayerInfo = (props: PlayerInfoProps) => {
 
@@ -19,6 +20,7 @@ export const PlayerInfo = (props: PlayerInfoProps) => {
       <p>Name: {props.name}</p>
       <p>{Math.round(props.yearsOld)} Years Old</p>
       <p>{props.wellbeing} Wellbeing Score ({wellbeingStringFromScore(props.wellbeing)})</p>
+      <p>{props.energy} Energy</p>
     </div>
   );
 };

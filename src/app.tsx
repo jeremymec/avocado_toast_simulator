@@ -34,6 +34,7 @@ export interface PlayerState {
   name: string;
   daysOld: number;
   wellbeing: number;
+  energy: number;
 }
 
 export interface GameState {
@@ -69,6 +70,7 @@ const App = () => {
     name: "Bob Ross",
     daysOld: STARTING_AGE,
     wellbeing: 50,
+    energy: 100
   });
 
   const [gameState, setGameState] = React.useState<GameState>({
@@ -99,6 +101,7 @@ const App = () => {
     setPlayerState({
       ...playerState,
       daysOld: playerState.daysOld + 1,
+      energy: calculateEnergy(playerState.energy)
     });
 
     setGameState({
@@ -106,6 +109,10 @@ const App = () => {
       date: new Date(gameState.date.getTime() + 86400000 * 3),
     });
   };
+
+  const calculateEnergy = (currentEnergy: number): number => {
+    return currentEnergy + (1 + (currentEnergy / 100));
+  }
 
   const processEvents = () => {
     const triggered_events = [];
@@ -178,10 +185,11 @@ const App = () => {
       balance: moneyState.balance + moneyState.activeIncome,
     });
 
-    setGameState({
-      ...gameState,
-      date: new Date(gameState.date.getTime() + 86400000 * 6),
+    setPlayerState({
+      ...playerState,
+      energy: playerState.energy - 5
     });
+
   };
 
   const handleUpgradePurchase = (upgrade: Upgrade) => {
@@ -204,6 +212,7 @@ const App = () => {
         name={playerState.name}
         yearsOld={gameState.date.getFullYear() - 2000}
         wellbeing={playerState.wellbeing}
+        energy={playerState.energy}
       />
       <GameInfo currentDate={gameState.date}></GameInfo>
       <MessageLog messages={messages}></MessageLog>
