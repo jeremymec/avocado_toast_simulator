@@ -7,7 +7,7 @@ interface PlayerInfoProps {
   wellbeing: number;
   energy: number;
 }
-export const PlayerInfo = (props: PlayerInfoProps) => {
+const PlayerInfo = (props: PlayerInfoProps) => {
 
   const playerInfoPanelStyle: CSS.Properties = {
     borderRadius: "1px",
@@ -20,7 +20,7 @@ export const PlayerInfo = (props: PlayerInfoProps) => {
       <p>Name: {props.name}</p>
       <p>{Math.round(props.yearsOld)} Years Old</p>
       <p>{props.wellbeing} Wellbeing Score ({wellbeingStringFromScore(props.wellbeing)})</p>
-      <p>{props.energy} Energy</p>
+      <p>{Math.trunc(props.energy)} Energy</p>
     </div>
   );
 };
@@ -43,3 +43,5 @@ const wellbeingStringFromScore = (score: number): string => {
   }
   return "Mental Breakdown";
 }
+
+export default PlayerInfo;

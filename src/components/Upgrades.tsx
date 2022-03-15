@@ -6,7 +6,7 @@ interface UpgradesProps {
   avaliableUpgrades: Upgrade[];
   upgradeCallback: (upgrade: Upgrade) => void
 }
-export const Upgrades = (props: UpgradesProps) => {
+const Upgrades = (props: UpgradesProps) => {
 
   const upgradesPanelStyle: CSS.Properties = {
     borderRadius: "1px",
@@ -32,3 +32,5 @@ export const Upgrades = (props: UpgradesProps) => {
     </div>
   );
 };
+
+export default Upgrades;

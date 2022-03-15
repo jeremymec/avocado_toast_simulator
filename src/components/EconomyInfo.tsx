@@ -6,7 +6,8 @@ interface EconomyInfoProps {
   passiveIncome: number;
   activeIncome: number;
 }
-export const EconomyInfo = (props: EconomyInfoProps) => {
+
+const EconomyInfo = (props: EconomyInfoProps) => {
 
   const economyInfoPanelStyle: CSS.Properties = {
     borderRadius: "1px",
@@ -22,3 +23,5 @@ export const EconomyInfo = (props: EconomyInfoProps) => {
     </div>
   );
 };
+
+export default EconomyInfo;

@@ -1,28 +1,13 @@
 import * as React from "react";
-import { EconomyInfo } from "./components/EconomyInfo";
-import { PlayerInfo } from "./components/PlayerInfo";
-import { GameInfo } from "./components/GameInfo";
+import EconomyInfo from "./components/EconomyInfo";
+import PlayerInfo from "./components/PlayerInfo";
+import GameInfo from "./components/GameInfo";
 import { game_events, Event } from "./event";
-import { MessageLog } from "./components/MessageLog";
-import { Upgrades } from "./components/Upgrades";
+import MessageLog from "./components/MessageLog";
+import Upgrades from "./components/Upgrades";
 import { upgrades, Upgrade } from "./upgrade";
+import * as Constants from "./constants"
 
-const STARTING_AGE = 6570;
-const STARTING_DATE = new Date(2018, 1, 1);
-export const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 
 export interface MoneyState {
   balance: number;
@@ -68,13 +53,13 @@ const App = () => {
 
   const [playerState, setPlayerState] = React.useState<PlayerState>({
     name: "Bob Ross",
-    daysOld: STARTING_AGE,
+    daysOld: Constants.STARTING_AGE,
     wellbeing: 50,
     energy: 100
   });
 
   const [gameState, setGameState] = React.useState<GameState>({
-    date: STARTING_DATE,
+    date: Constants.STARTING_DATE,
   });
 
   const [messages, setMessages] = React.useState<string[]>([
@@ -101,7 +86,7 @@ const App = () => {
     setPlayerState({
       ...playerState,
       daysOld: playerState.daysOld + 1,
-      energy: calculateEnergy(playerState.energy)
+      energy: calculateEnergy(playerState.energy, 0.5 + (3 * playerState.energy / 100))
     });
 
     setGameState({
@@ -110,8 +95,8 @@ const App = () => {
     });
   };
 
-  const calculateEnergy = (currentEnergy: number): number => {
-    return currentEnergy + (1 + (currentEnergy / 100));
+  const calculateEnergy = (currentEnergy: number, modification: number): number => {
+    return Math.min(Math.max(currentEnergy + modification, 0), 100)
   }
 
   const processEvents = () => {
@@ -187,7 +172,7 @@ const App = () => {
 
     setPlayerState({
       ...playerState,
-      energy: playerState.energy - 5
+      energy: calculateEnergy(playerState.energy, -(Constants.OVERTIME_ENERGY_COST))
     });
 
   };
@@ -217,7 +202,7 @@ const App = () => {
       <GameInfo currentDate={gameState.date}></GameInfo>
       <MessageLog messages={messages}></MessageLog>
       <Upgrades avaliableUpgrades={availableUpgrades} upgradeCallback={handleUpgradePurchase}></Upgrades>
-      <button onClick={handleWorkButtonPress}>Work Overtime</button>
+      <button onClick={handleWorkButtonPress} disabled={(playerState.energy <= Constants.OVERTIME_ENERGY_COST)}>Work Overtime</button>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import * as CSS from 'csstype';
 interface MessageLogProps {
   messages: string[];
 }
-export const MessageLog = (props: MessageLogProps) => {
+const MessageLog = (props: MessageLogProps) => {
 
   const messageBoxStyle: CSS.Properties = {
     borderRadius: "1px",
@@ -20,3 +20,5 @@ export const MessageLog = (props: MessageLogProps) => {
     </div>
   );
 };
+
+export default MessageLog;
