@@ -1,18 +1,24 @@
 import * as React from "react";
-import EconomyInfo from "./components/EconomyInfo";
 import PlayerInfo from "./components/PlayerInfo";
-import GameInfo from "./components/GameInfo";
+import Calender from "./components/Calender";
 import { game_events, Event } from "./event";
-import MessageLog from "./components/MessageLog";
 import Upgrades from "./components/Upgrades";
 import { upgrades, Upgrade } from "./upgrade";
-import * as Constants from "./constants"
-
+import * as Constants from "./constants";
+import toast, { Toaster } from "react-hot-toast";
+import WorkButton from "./components/WorkButton";
+import Expenses from "./components/Expenses";
+import Money from "./components/Money";
+import Shop from "./components/Shop";
+import Banner from "./components/Banner";
 
 export interface MoneyState {
   balance: number;
   passiveIncome: number;
   activeIncome: number;
+  rent: number;
+  foodCost: number;
+  bills: number;
 }
 
 export interface PlayerState {
@@ -20,6 +26,7 @@ export interface PlayerState {
   daysOld: number;
   wellbeing: number;
   energy: number;
+  livingSituation: string;
 }
 
 export interface GameState {
@@ -42,20 +49,28 @@ const App = () => {
   const [time, setTime] = React.useState(Date.now());
   const [gameEvents, setGameEvents] = React.useState(game_events);
 
-  const [availableUpgrades, setAvailableUpgrades] = React.useState<Upgrade[]>([]);
-  const [upgradePool, setUpgradePool] = React.useState<Upgrade[]>([...upgrades]);
+  const [availableUpgrades, setAvailableUpgrades] = React.useState<Upgrade[]>(
+    []
+  );
+  const [upgradePool, setUpgradePool] = React.useState<Upgrade[]>([
+    ...upgrades,
+  ]);
 
   const [moneyState, setMoneyState] = React.useState<MoneyState>({
-    balance: 0,
+    balance: Constants.STARTING_BALANCE,
     passiveIncome: 2,
     activeIncome: 10,
+    rent: Constants.STARTING_RENT,
+    foodCost: Constants.STARTING_FOOD_COST,
+    bills: Constants.STARTING_BILLS,
   });
 
   const [playerState, setPlayerState] = React.useState<PlayerState>({
     name: "Bob Ross",
     daysOld: Constants.STARTING_AGE,
     wellbeing: 50,
-    energy: 100
+    energy: 100,
+    livingSituation: Constants.STARTING_LIVING_SITUATION,
   });
 
   const [gameState, setGameState] = React.useState<GameState>({
@@ -86,18 +101,47 @@ const App = () => {
     setPlayerState({
       ...playerState,
       daysOld: playerState.daysOld + 1,
-      energy: calculateEnergy(playerState.energy, 0.5 + (3 * playerState.energy / 100))
+      energy: calculateEnergy(
+        playerState.energy,
+        0.5 + (3 * playerState.energy) / 100
+      ),
     });
+
+    const nextDate = calculateNextDate(gameState.date);
+
+    if (gameState.date.getMonth() !== nextDate.getMonth()) {
+      // If the month has changed, apply monthly expenses
+      const totalExpenses =
+        moneyState.rent + moneyState.bills + moneyState.foodCost;
+
+      toast(
+        `You paid your bill of $${totalExpenses} for ${
+          Constants.MONTHS[gameState.date.getMonth()]
+        }'s Expenses.`
+      );
+
+      setMoneyState({
+        ...moneyState,
+        balance: moneyState.balance - totalExpenses,
+      });
+    }
 
     setGameState({
       ...gameState,
-      date: new Date(gameState.date.getTime() + 86400000 * 3),
+      date: nextDate,
     });
   };
 
-  const calculateEnergy = (currentEnergy: number, modification: number): number => {
-    return Math.min(Math.max(currentEnergy + modification, 0), 100)
-  }
+  const calculateEnergy = (
+    currentEnergy: number,
+    modification: number
+  ): number => {
+    return Math.min(Math.max(currentEnergy + modification, 0), 100);
+  };
+
+  const calculateNextDate = (currentDate: Date): Date => {
+    return new Date(currentDate.getTime() + Constants.TIME_INCREMENT);
+  };
 
   const processEvents = () => {
     const triggered_events = [];
@@ -139,30 +183,34 @@ const App = () => {
         setGameState
       );
       for (let message of action.messages) {
-        setMessages([...messages, message])
+        setMessages([...messages, message]);
       }
     }
   };
 
   const appendAvailableUpgrades = () => {
-    const upgrades_to_remove: Upgrade[] = []
+    const upgrades_to_remove: Upgrade[] = [];
 
     for (let upgrade of upgradePool) {
-      if (upgrade.is_available(
-        moneyState,
-        setMoneyState,
-        playerState,
-        setPlayerState, 
-        gameState,
-        setGameState
-      )) {
+      if (
+        upgrade.is_available(
+          moneyState,
+          setMoneyState,
+          playerState,
+          setPlayerState,
+          gameState,
+          setGameState
+        )
+      ) {
         setAvailableUpgrades([...availableUpgrades, upgrade]);
         upgrades_to_remove.push(upgrade);
       }
     }
 
-    setUpgradePool(upgradePool.filter(upgrade => !upgrades_to_remove.includes(upgrade)));
-  }
+    setUpgradePool(
+      upgradePool.filter((upgrade) => !upgrades_to_remove.includes(upgrade))
+    );
+  };
 
   const handleWorkButtonPress = () => {
     setMoneyState({
@@ -172,37 +220,65 @@ const App = () => {
 
     setPlayerState({
       ...playerState,
-      energy: calculateEnergy(playerState.energy, -(Constants.OVERTIME_ENERGY_COST))
+      energy: calculateEnergy(
+        playerState.energy,
+        -Constants.OVERTIME_ENERGY_COST
+      ),
     });
-
   };
 
   const handleUpgradePurchase = (upgrade: Upgrade) => {
     executeActions(upgrade.actions);
     setPlayerState({
       ...playerState,
-      wellbeing: playerState.wellbeing - upgrade.wellbeing_cost
+      wellbeing: playerState.wellbeing - upgrade.wellbeing_cost,
     });
-    setAvailableUpgrades(availableUpgrades.filter(upgrade => upgrade !== upgrade));
-  }
+    setAvailableUpgrades(
+      availableUpgrades.filter((upgrade) => upgrade !== upgrade)
+    );
+  };
 
   return (
     <div>
-      <EconomyInfo
-        playerBalance={moneyState.balance}
-        activeIncome={moneyState.activeIncome}
-        passiveIncome={moneyState.passiveIncome}
-      ></EconomyInfo>
-      <PlayerInfo
-        name={playerState.name}
-        yearsOld={gameState.date.getFullYear() - 2000}
-        wellbeing={playerState.wellbeing}
-        energy={playerState.energy}
-      />
-      <GameInfo currentDate={gameState.date}></GameInfo>
-      <MessageLog messages={messages}></MessageLog>
-      <Upgrades avaliableUpgrades={availableUpgrades} upgradeCallback={handleUpgradePurchase}></Upgrades>
-      <button onClick={handleWorkButtonPress} disabled={(playerState.energy <= Constants.OVERTIME_ENERGY_COST)}>Work Overtime</button>
+      <Banner messages={messages}></Banner>
+      <div className="grid grid-cols-3 grid-rows-3">
+        <div className="row-span-3 bg-red-100">
+          <div className="flex flex-col items-center space-y-6">
+            <Money
+              playerBalance={moneyState.balance}
+              passiveIncome={moneyState.passiveIncome}
+            ></Money>
+            <Calender currentDate={gameState.date}></Calender>
+            <WorkButton
+              energyRequirment={Constants.OVERTIME_ENERGY_COST}
+              playerEnergy={playerState.energy}
+              workButtonCallback={handleWorkButtonPress}
+            ></WorkButton>
+            <Upgrades
+              avaliableUpgrades={availableUpgrades}
+              upgradeCallback={handleUpgradePurchase}
+            ></Upgrades>
+          </div>
+        </div>
+        <div className="bg-green-100">
+          <Expenses
+            bills={moneyState.bills}
+            food={moneyState.foodCost}
+            rent={moneyState.rent}
+          ></Expenses>
+        </div>
+        <div className="bg-orange-100">
+          <PlayerInfo
+            name={playerState.name}
+            living_situation={playerState.livingSituation}
+            yearsOld={gameState.date.getFullYear() - 2000}
+            wellbeing={playerState.wellbeing}
+          />
+        </div>
+        <div className="col-span-2 row-span-2 bg-pink-100">
+          <Shop></Shop>
+        </div>
+      </div>
     </div>
   );
 };

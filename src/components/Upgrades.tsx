@@ -8,21 +8,11 @@ interface UpgradesProps {
 }
 const Upgrades = (props: UpgradesProps) => {
 
-  const upgradesPanelStyle: CSS.Properties = {
-    borderRadius: "1px",
-    borderStyle: "solid"
-  };
-
-  const upgradeBoxStyle: CSS.Properties = {
-    borderRadius: "1px",
-    borderStyle: "solid"
-  }
-
   return (
-    <div id="UpgradesPanel" style={upgradesPanelStyle}>
+    <div id="UpgradesPanel">
       <h2>Upgrades</h2>
       {props.avaliableUpgrades.map((upgrade, key) => {
-        return <div key={key} style={upgradeBoxStyle}>
+        return <div key={key}>
           <p>{upgrade.name}</p>
           <p>{upgrade.description}</p>
           <p>Cost: {upgrade.wellbeing_cost} Wellbeing</p>

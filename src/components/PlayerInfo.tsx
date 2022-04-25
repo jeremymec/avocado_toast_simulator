@@ -3,24 +3,19 @@ import * as CSS from 'csstype';
 
 interface PlayerInfoProps {
   name: string;
+  living_situation: string;
   yearsOld: number;
   wellbeing: number;
-  energy: number;
 }
 const PlayerInfo = (props: PlayerInfoProps) => {
 
-  const playerInfoPanelStyle: CSS.Properties = {
-    borderRadius: "1px",
-    borderStyle: "solid"
-  };
-
   return (
-    <div id="PlayerInfoPanel" style={playerInfoPanelStyle}>
+    <div id="PlayerInfoPanel">
       <h2>Player Info</h2>
       <p>Name: {props.name}</p>
+      <p>Living Situation: {props.living_situation}</p>
       <p>{Math.round(props.yearsOld)} Years Old</p>
       <p>{props.wellbeing} Wellbeing Score ({wellbeingStringFromScore(props.wellbeing)})</p>
-      <p>{Math.trunc(props.energy)} Energy</p>
     </div>
   );
 };
