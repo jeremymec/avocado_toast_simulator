@@ -8,15 +8,18 @@ interface MoneyProps {
 
 const Money = (props: MoneyProps) => {
 
-  const economyInfoPanelStyle: CSS.Properties = {
-    borderRadius: "1px",
-    borderStyle: "solid"
-  };
-
   return (
-    <div id="EconomyInfoPanel" style={economyInfoPanelStyle}>
-      <p>${props.playerBalance}</p>
-      <p>+ ${props.passiveIncome} per second</p>
+    <div className="flex flex-col text-center">
+      <p className="font-gugi text-5xl font-thin" style={{
+        WebkitTextStroke: ".06rem",
+        WebkitTextStrokeColor: "gold",
+        paintOrder: "stroke"
+      }}>${props.playerBalance}</p>
+      <p className="font-gugi font-thin" style={{
+        WebkitTextStroke: "0.02rem",
+        WebkitTextStrokeColor: "gold",
+        paintOrder: "stroke"
+      }}>+ ${props.passiveIncome} per second</p>
     </div>
   );
 };

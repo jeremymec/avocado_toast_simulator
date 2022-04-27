@@ -2,7 +2,6 @@ import * as React from "react";
 import PlayerInfo from "./components/PlayerInfo";
 import Calender from "./components/Calender";
 import { game_events, Event } from "./event";
-import Upgrades from "./components/Upgrades";
 import { upgrades, Upgrade } from "./upgrade";
 import * as Constants from "./constants";
 import toast, { Toaster } from "react-hot-toast";
@@ -11,6 +10,9 @@ import Expenses from "./components/Expenses";
 import Money from "./components/Money";
 import Shop from "./components/Shop";
 import Banner from "./components/Banner";
+import Energy from "./components/Energy";
+import Promotion from "./components/Promotion";
+import { firstJob, Job, unemployed } from "./job";
 
 export interface MoneyState {
   balance: number;
@@ -27,6 +29,7 @@ export interface PlayerState {
   wellbeing: number;
   energy: number;
   livingSituation: string;
+  job: Job;
 }
 
 export interface GameState {
@@ -71,6 +74,7 @@ const App = () => {
     wellbeing: 50,
     energy: 100,
     livingSituation: Constants.STARTING_LIVING_SITUATION,
+    job: unemployed
   });
 
   const [gameState, setGameState] = React.useState<GameState>({
@@ -227,6 +231,19 @@ const App = () => {
     });
   };
 
+  const handlePromotion = (promotion: Job) => {
+    setPlayerState({
+      ...playerState,
+      job: promotion
+    })
+
+    setMoneyState({
+      ...moneyState,
+      activeIncome: promotion.activeIncome,
+      passiveIncome: promotion.passiveIncome,
+    })
+  };
+
   const handleUpgradePurchase = (upgrade: Upgrade) => {
     executeActions(upgrade.actions);
     setPlayerState({
@@ -254,10 +271,11 @@ const App = () => {
               playerEnergy={playerState.energy}
               workButtonCallback={handleWorkButtonPress}
             ></WorkButton>
-            <Upgrades
-              avaliableUpgrades={availableUpgrades}
-              upgradeCallback={handleUpgradePurchase}
-            ></Upgrades>
+            <Energy currentEnergy={playerState.energy}></Energy>
+            {playerState.job.promotion && <Promotion
+              avaliablePromotion={playerState.job.promotion!}
+              promotionCallback={handlePromotion}
+            ></Promotion>}
           </div>
         </div>
         <div className="bg-green-100">
