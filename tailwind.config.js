@@ -5,7 +5,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'gugi': ['Gugi', 'sans-serif']
+        'gugi': ['Gugi', 'cursive'],
+        'merriweather': ['Merriweather', 'serif']
       }
     },
   },

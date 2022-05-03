@@ -258,7 +258,7 @@ const App = () => {
   return (
     <div>
       <Banner messages={messages}></Banner>
-      <div className="grid grid-cols-3 grid-rows-3">
+      <div className="grid grid-cols-3 grid-rows-3 my-5">
         <div className="row-span-3 bg-red-100">
           <div className="flex flex-col items-center space-y-6">
             <Money
@@ -269,6 +269,7 @@ const App = () => {
             <WorkButton
               energyRequirment={Constants.OVERTIME_ENERGY_COST}
               playerEnergy={playerState.energy}
+              reward={moneyState.passiveIncome}
               workButtonCallback={handleWorkButtonPress}
             ></WorkButton>
             <Energy currentEnergy={playerState.energy}></Energy>

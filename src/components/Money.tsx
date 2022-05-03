@@ -12,12 +12,12 @@ const Money = (props: MoneyProps) => {
     <div className="flex flex-col text-center">
       <p className="font-gugi text-5xl font-thin" style={{
         WebkitTextStroke: ".06rem",
-        WebkitTextStrokeColor: "gold",
+        WebkitTextStrokeColor: "#FFB800",
         paintOrder: "stroke"
       }}>${props.playerBalance}</p>
       <p className="font-gugi font-thin" style={{
         WebkitTextStroke: "0.02rem",
-        WebkitTextStrokeColor: "gold",
+        WebkitTextStrokeColor: "#FFB800",
         paintOrder: "stroke"
       }}>+ ${props.passiveIncome} per second</p>
     </div>
