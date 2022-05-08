@@ -61,8 +61,8 @@ const App = () => {
 
   const [moneyState, setMoneyState] = React.useState<MoneyState>({
     balance: Constants.STARTING_BALANCE,
-    passiveIncome: 2,
-    activeIncome: 10,
+    passiveIncome: 0,
+    activeIncome: 0,
     rent: Constants.STARTING_RENT,
     foodCost: Constants.STARTING_FOOD_COST,
     bills: Constants.STARTING_BILLS,
@@ -259,7 +259,7 @@ const App = () => {
     <div>
       <Banner messages={messages}></Banner>
       <div className="grid grid-cols-3 grid-rows-3 my-5">
-        <div className="row-span-3 bg-red-100">
+        <div className="row-span-3">
           <div className="flex flex-col items-center space-y-6">
             <Money
               playerBalance={moneyState.balance}
@@ -269,7 +269,7 @@ const App = () => {
             <WorkButton
               energyRequirment={Constants.OVERTIME_ENERGY_COST}
               playerEnergy={playerState.energy}
-              reward={moneyState.passiveIncome}
+              reward={moneyState.activeIncome}
               workButtonCallback={handleWorkButtonPress}
             ></WorkButton>
             <Energy currentEnergy={playerState.energy}></Energy>
