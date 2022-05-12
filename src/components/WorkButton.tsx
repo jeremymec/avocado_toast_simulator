@@ -13,7 +13,7 @@ const WorkButton = (props: WorkButtonProps) => {
   return (
     <div>
       <button
-        className="w-[350px] h-[350px] bg-[#FFF6C6] text-black font-bold py-2 px-4 rounded-full drop-shadow-md"
+        className="w-[20em] h-[20em] bg-[#FFF6C6] text-black font-bold py-2 px-4 rounded-full drop-shadow-md active:shadow-lg active:transform(.95) transform active:scale-95 transition duration-150 ease-in-out"
         onClick={props.workButtonCallback}
         disabled={props.playerEnergy <= props.energyRequirment}
       >

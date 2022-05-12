@@ -258,14 +258,14 @@ const App = () => {
   return (
     <div>
       <Banner messages={messages}></Banner>
-      <div className="grid grid-cols-3 grid-rows-3 my-5">
+      <div className="grid grid-cols-3 grid-rows-3">
         <div className="row-span-3">
-          <div className="flex flex-col items-center space-y-6">
+          <div className="relative flex flex-col items-center space-y-6">
+            <Calender currentDate={gameState.date}></Calender>
             <Money
               playerBalance={moneyState.balance}
               passiveIncome={moneyState.passiveIncome}
             ></Money>
-            <Calender currentDate={gameState.date}></Calender>
             <WorkButton
               energyRequirment={Constants.OVERTIME_ENERGY_COST}
               playerEnergy={playerState.energy}
@@ -289,9 +289,10 @@ const App = () => {
         <div className="bg-orange-100">
           <PlayerInfo
             name={playerState.name}
-            living_situation={playerState.livingSituation}
+            livingSituation={playerState.livingSituation}
             yearsOld={gameState.date.getFullYear() - 2000}
             wellbeing={playerState.wellbeing}
+            currentJob={playerState.job}
           />
         </div>
         <div className="col-span-2 row-span-2 bg-pink-100">

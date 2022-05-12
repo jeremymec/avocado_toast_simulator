@@ -6,7 +6,8 @@ module.exports = {
     extend: {
       fontFamily: {
         'gugi': ['Gugi', 'cursive'],
-        'merriweather': ['Merriweather', 'serif']
+        'merriweather': ['Merriweather', 'serif'],
+        'red-rose': ['Red Rose', 'cursive']
       }
     },
   },

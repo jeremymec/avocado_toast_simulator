@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as CSS from 'csstype';
 import * as Constants from "../constants"
+import CalendarIcon from "../assets/calendar.png";
 
 
 interface CalenderProps {
@@ -9,8 +10,9 @@ interface CalenderProps {
 const Calender = (props: CalenderProps) => {
 
   return (
-    <div id="CalenderPanel">
-      <p>{Constants.MONTHS[props.currentDate.getMonth()]} {props.currentDate.getFullYear()}</p>
+    <div className="absolute right-3 top-3 text-center justify-center">
+      <img className="w-[7em]" src={CalendarIcon}></img>
+      <p className="absolute top-10 font-red-rose text-2xl w-full">{Constants.MONTHS[props.currentDate.getMonth()]}<br></br>{props.currentDate.getFullYear()}</p>
     </div>
   );
 };
