@@ -18,8 +18,8 @@ export const secondJob: Job = {
 export const firstJob: Job = {
     name: "First Job",
     description: "\"This is a test description. It should be long, like a good description should!\"",
-    passiveIncome: 25,
-    activeIncome: 5,
+    passiveIncome: 50,
+    activeIncome: 25,
     wellbeingCost: 10,
     promotion: secondJob
 }

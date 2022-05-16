@@ -13,6 +13,7 @@ import Banner from "./components/Banner";
 import Energy from "./components/Energy";
 import Promotion from "./components/Promotion";
 import { firstJob, Job, unemployed } from "./job";
+import Background from "./assets/background.png"
 
 export interface MoneyState {
   balance: number;
@@ -256,7 +257,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="bg-[url(./assets/background.png)]">
       <Banner messages={messages}></Banner>
       <div className="grid grid-cols-3 grid-rows-3">
         <div className="row-span-3">
@@ -279,14 +280,14 @@ const App = () => {
             ></Promotion>}
           </div>
         </div>
-        <div className="bg-green-100">
+        <div className="bg-gray-200 bg-opacity-10 shadow-md">
           <Expenses
             bills={moneyState.bills}
             food={moneyState.foodCost}
             rent={moneyState.rent}
           ></Expenses>
         </div>
-        <div className="bg-orange-100">
+        <div className="bg-gray-200 bg-opacity-10">
           <PlayerInfo
             name={playerState.name}
             livingSituation={playerState.livingSituation}
@@ -295,8 +296,8 @@ const App = () => {
             currentJob={playerState.job}
           />
         </div>
-        <div className="col-span-2 row-span-2 bg-pink-100">
-          <Shop></Shop>
+        <div className="col-span-2 row-span-2 bg-gray-200 bg-opacity-10 shadow-md">
+          <Shop selected="houses"></Shop>
         </div>
       </div>
     </div>

@@ -9,9 +9,9 @@ interface ExpensesProps {
 
 const Expenses = (props: ExpensesProps) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-y-7">
-      <p className="text-3xl font-merriweather font-bold mt-5">Monthly Expenses</p>
-      <div className="grid grid-cols-2 text-left gap-x-52">
+    <div className="flex flex-col items-center justify-center gap-y-2 h-full border-r-2 border-dashed border-black">
+      <p className="text-3xl font-merriweather font-bold">Monthly Expenses</p>
+      <div className="grid grid-cols-2 text-left gap-x-52 mt-5">
         <p className="text-xl font-merriweather font-bold">Rent:</p>
         <p className="text-2xl font-gugi">${props.rent}</p>
         <p className="text-xl font-merriweather font-bold">Food:</p>
