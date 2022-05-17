@@ -1,8 +1,10 @@
 import { Action } from "./app";
 import { MoneyState, PlayerState, GameState } from "./app";
+import AvacadoToast from "./assets/avacado_toast.png";
 
 export interface Upgrade {
   name: string;
+  image: any;
   description: string;
   wellbeing_cost: number;
   actions: Action[];
@@ -16,20 +18,11 @@ export interface Upgrade {
 
 export const upgrades: Upgrade[] = [
   {
-    name: "Job: Office Clerk",
-    description: "+$50 Passive Income\n",
-    wellbeing_cost: 5,
-    actions: [
-      {
-        messages: ["Congratulations! You got your first job at Generic Co."],
-        effect: (m, setM, p, setP, g, setG) => {
-          setM({
-            ...m,
-            passiveIncome: m.passiveIncome + 50,
-          });
-        },
-      },
-    ],
+    name: "Test Upgrade",
+    image: AvacadoToast,
+    description: "Test description.",
+    wellbeing_cost: 10,
+    actions: [],
     is_available: () => true
-  },
+  }
 ];

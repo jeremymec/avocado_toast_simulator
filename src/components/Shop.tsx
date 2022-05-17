@@ -2,8 +2,12 @@ import * as React from "react";
 import * as CSS from "csstype";
 import Houses from "./Houses";
 import { House, avaliableHouses } from "../house";
+import Upgrades from "./Upgrades";
+import { Upgrade } from "../upgrade"
 
-interface ShopProps {}
+interface ShopProps {
+  avaliableUpgrades: Upgrade[]
+}
 
 const Shop = (props: ShopProps) => {
   const [selected, setSelected] = React.useState<"houses" | "upgrades">(
@@ -40,7 +44,7 @@ const Shop = (props: ShopProps) => {
           {selected === "houses" ? (
             <Houses availableHouses={avaliableHouses} />
           ) : (
-            <p>Upgrades</p>
+            <Upgrades availableUpgrades={props.avaliableUpgrades}></Upgrades>
           )}
       </div>
     </div>

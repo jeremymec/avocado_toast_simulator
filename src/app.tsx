@@ -13,7 +13,7 @@ import Banner from "./components/Banner";
 import Energy from "./components/Energy";
 import Promotion from "./components/Promotion";
 import { firstJob, Job, unemployed } from "./job";
-import Background from "./assets/background.png"
+import Background from "./assets/background.png";
 
 export interface MoneyState {
   balance: number;
@@ -75,7 +75,7 @@ const App = () => {
     wellbeing: 50,
     energy: 100,
     livingSituation: Constants.STARTING_LIVING_SITUATION,
-    job: unemployed
+    job: unemployed,
   });
 
   const [gameState, setGameState] = React.useState<GameState>({
@@ -121,8 +121,12 @@ const App = () => {
 
       toast(
         `You paid your bill of $${totalExpenses} for ${
-          Constants.MONTHS[gameState.date.getMonth()]
-        }'s Expenses.`
+          Constants.MONTHS_READABLE[gameState.date.getMonth()]
+        }'s Expenses.`,
+        {
+          duration: 5000,
+          position: "top-left"
+        }
       );
 
       setMoneyState({
@@ -235,14 +239,14 @@ const App = () => {
   const handlePromotion = (promotion: Job) => {
     setPlayerState({
       ...playerState,
-      job: promotion
-    })
+      job: promotion,
+    });
 
     setMoneyState({
       ...moneyState,
       activeIncome: promotion.activeIncome,
       passiveIncome: promotion.passiveIncome,
-    })
+    });
   };
 
   const handleUpgradePurchase = (upgrade: Upgrade) => {
@@ -274,10 +278,12 @@ const App = () => {
               workButtonCallback={handleWorkButtonPress}
             ></WorkButton>
             <Energy currentEnergy={playerState.energy}></Energy>
-            {playerState.job.promotion && <Promotion
-              avaliablePromotion={playerState.job.promotion!}
-              promotionCallback={handlePromotion}
-            ></Promotion>}
+            {playerState.job.promotion && (
+              <Promotion
+                avaliablePromotion={playerState.job.promotion!}
+                promotionCallback={handlePromotion}
+              ></Promotion>
+            )}
           </div>
         </div>
         <div className="bg-gray-200 bg-opacity-10 shadow-md">
@@ -297,9 +303,10 @@ const App = () => {
           />
         </div>
         <div className="col-span-2 row-span-2 bg-gray-200 bg-opacity-10 shadow-md">
-          <Shop selected="houses"></Shop>
+          <Shop avaliableUpgrades={availableUpgrades}></Shop>
         </div>
       </div>
+      <Toaster></Toaster>
     </div>
   );
 };

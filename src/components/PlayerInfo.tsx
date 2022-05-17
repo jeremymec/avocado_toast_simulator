@@ -23,7 +23,7 @@ const PlayerInfo = (props: PlayerInfoProps) => {
           <p className="font-merriweather text-xs">Pictured,</p>
           <p className="font-merriweather text-xs">{props.name}</p>
         </div>
-        <p className="font-merriweather">{props.name}, {props.yearsOld} years old works as a {props.currentJob.name}. He currently rents a {props.livingSituation}. They're a fine example of a freshly graduated student taking some bold first steps in the world!</p>
+        <p className="font-merriweather"> {props.yearsOld} year old {props.name} {props.currentJob.informationDescription}. He currently rents a {props.livingSituation}. They're a fine example of a freshly graduated student taking some bold first steps in the world!</p>
       </div>
     </div>
   );

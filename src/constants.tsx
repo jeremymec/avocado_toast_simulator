@@ -1,6 +1,7 @@
 export const STARTING_AGE = 6570;
 export const STARTING_DATE = new Date(2018, 1, 1);
-export const STARTING_LIVING_SITUATION = 'one bedroom apartment in the nice part of town';
+export const STARTING_LIVING_SITUATION =
+  "one bedroom apartment in the nice part of town";
 export const STARTING_RENT = 100;
 export const STARTING_BILLS = 20;
 export const STARTING_FOOD_COST = 50;
@@ -19,6 +20,21 @@ export const MONTHS = [
   "OCT",
   "NOV",
   "DEC",
+];
+
+export const MONTHS_READABLE = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 export const TIME_INCREMENT = 86400000 * 3;

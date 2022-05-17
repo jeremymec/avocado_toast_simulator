@@ -13,7 +13,7 @@ const Promotion = (props: PromotionProps) => {
         Promotion: {props.avaliablePromotion.name}
       </p>
       <hr className="border border-zinc-700 w-8/12"></hr>
-      <p className="font-merriweather italic">{props.avaliablePromotion.description}</p>
+      <p className="font-merriweather italic mx-10">{props.avaliablePromotion.description}</p>
       <div className="grid grid-cols-2 text-left gap-x-20">
         <p className="text-xl font-merriweather font-bold">Passive Income:</p>
         <p className="text-2xl font-gugi">${props.avaliablePromotion.passiveIncome}</p>
