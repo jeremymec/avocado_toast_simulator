@@ -11,9 +11,10 @@ import Money from "./components/Money";
 import Shop from "./components/Shop";
 import Banner from "./components/Banner";
 import Energy from "./components/Energy";
-import Promotion from "./components/Promotion";
+import Promotion from "./components/Job";
 import { firstJob, Job, unemployed } from "./job";
 import Background from "./assets/background.png";
+import JobPanel from "./components/Job";
 
 export interface MoneyState {
   balance: number;
@@ -35,6 +36,18 @@ export interface PlayerState {
 
 export interface GameState {
   date: Date;
+}
+
+export interface WorkState {
+  totalWorkCount: number,
+  currentJobWorkCount: number
+}
+
+export interface CombinedState {
+  moneyState: MoneyState,
+  playerState: PlayerState,
+  gameState: GameState,
+  workState: WorkState
 }
 
 export interface Action {
@@ -82,6 +95,11 @@ const App = () => {
     date: Constants.STARTING_DATE,
   });
 
+  const [workState, setWorkState] = React.useState<WorkState>({
+    totalWorkCount: 0,
+    currentJobWorkCount: 0
+  });
+
   const [messages, setMessages] = React.useState<string[]>([
     "Welcome to Avocado Toast",
   ]);
@@ -96,6 +114,15 @@ const App = () => {
       clearInterval(interval);
     };
   }, [time]);
+
+  const combinedState = (): CombinedState => {
+    return {
+      moneyState,
+      playerState,
+      gameState,
+      workState
+    }
+  }
 
   const updateState = () => {
     setMoneyState({
@@ -234,19 +261,34 @@ const App = () => {
         -Constants.OVERTIME_ENERGY_COST
       ),
     });
+
+    setWorkState({
+      ...workState,
+      totalWorkCount: workState.totalWorkCount + 1,
+      currentJobWorkCount: workState.currentJobWorkCount + 1
+    })
   };
 
   const handlePromotion = (promotion: Job) => {
-    setPlayerState({
-      ...playerState,
-      job: promotion,
-    });
 
-    setMoneyState({
-      ...moneyState,
-      activeIncome: promotion.activeIncome,
-      passiveIncome: promotion.passiveIncome,
-    });
+    const response = promotion.apply(combinedState());
+
+    if (response.result) {
+      setPlayerState({
+        ...playerState,
+        job: promotion,
+      });
+  
+      setMoneyState({
+        ...moneyState,
+        activeIncome: promotion.activeIncome,
+        passiveIncome: promotion.passiveIncome,
+      });
+
+      toast(`You've been prompted to ${promotion.name}`)
+    } else {
+      toast(response.message ?? "You don't appear to be qualified for that position!");
+    }
   };
 
   const handleUpgradePurchase = (upgrade: Upgrade) => {
@@ -279,10 +321,11 @@ const App = () => {
             ></WorkButton>
             <Energy currentEnergy={playerState.energy}></Energy>
             {playerState.job.promotion && (
-              <Promotion
+              <JobPanel
+                job={playerState.job}
                 avaliablePromotion={playerState.job.promotion!}
                 promotionCallback={handlePromotion}
-              ></Promotion>
+              ></JobPanel>
             )}
           </div>
         </div>

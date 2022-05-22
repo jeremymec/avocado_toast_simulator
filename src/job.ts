@@ -1,3 +1,5 @@
+import { CombinedState } from "./app";
+
 export interface Job {
   name: string;
   description: string;
@@ -5,16 +7,23 @@ export interface Job {
   passiveIncome: number;
   activeIncome: number;
   wellbeingCost: number;
+  apply:(state: CombinedState) => ApplicationResponse;
   promotion?: Job;
+}
+
+export interface ApplicationResponse {
+    result: boolean
+    message?: string
 }
 
 export const thirdJob: Job = {
     name: "Charity Worker",
-    description: "You're not sure what good cause you're meant to be promoting, but people are great at dodging ",
+    description: "You're not sure what good cause you're meant to be promoting, but people have suddenly become really good at avoiding eye contact.",
     informationDescription: "",
     passiveIncome: 0,
     activeIncome: 20,
     wellbeingCost: 10,
+    apply: (state) => { return { result: true } }
 } 
 
 export const secondJob: Job = {
@@ -24,6 +33,10 @@ export const secondJob: Job = {
     passiveIncome: 0,
     activeIncome: 20,
     wellbeingCost: 10,
+    apply: (state) => { return state.workState.currentJobWorkCount > 10 ?
+        { result: true } :
+        { result: false, message: "You need more experience."} },
+    promotion: thirdJob
 } 
 
 export const firstJob: Job = {
@@ -33,6 +46,7 @@ export const firstJob: Job = {
     passiveIncome: 0,
     activeIncome: 10,
     wellbeingCost: 10,
+    apply: (state) => { return { result: true } },
     promotion: secondJob
 }
 
@@ -43,5 +57,6 @@ export const unemployed: Job = {
     passiveIncome: 0,
     activeIncome: 0,
     wellbeingCost: 0,
+    apply: (state) => { return { result: true } },
     promotion: firstJob
 }
