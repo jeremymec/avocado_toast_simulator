@@ -6,7 +6,7 @@ import BriefcaseIcon from "../assets/briefcase.png";
 interface WorkButtonProps {
   playerEnergy: number;
   energyRequirment: number;
-  reward: number;
+  reward: [number, number];
   workButtonCallback: () => void;
 }
 const WorkButton = (props: WorkButtonProps) => {
@@ -19,7 +19,8 @@ const WorkButton = (props: WorkButtonProps) => {
       >
         <div className="flex flex-col items-center justify-center space-y-4 mt-5">
           <img className="w-[150px]" src={BriefcaseIcon}></img>
-          <p className="font-gugi text-4xl">+${props.reward}</p>
+          {/* <p className="font-gugi text-4xl">+${props.reward[0]} - {props.reward[1]}</p> */}
+          <p className="font-gugi text-4xl">Work</p>
         </div>
       </button>
     </div>

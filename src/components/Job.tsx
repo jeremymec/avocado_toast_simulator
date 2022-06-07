@@ -19,7 +19,7 @@ const JobPanel = (props: JobPanelProps) => {
         <p className="text-xl font-merriweather font-bold">Passive Income:</p>
         <p className="text-2xl font-gugi">${props.job.passiveIncome}</p>
         <p className="text-xl font-merriweather font-bold">Overtime Bonus:</p>
-        <p className="text-2xl font-gugi">${props.job.activeIncome}</p>
+        <p className="text-2xl font-gugi">${props.job.activeIncome[0]} - ${props.job.activeIncome[1]}</p>
         <p className="text-xl font-merriweather font-bold"> Stress Level:</p>
         <p className="text-xl font-merriweather font-bold">Medium</p>
       </div>

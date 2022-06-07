@@ -12,14 +12,14 @@ import Shop from "./components/Shop";
 import Banner from "./components/Banner";
 import Energy from "./components/Energy";
 import Promotion from "./components/Job";
-import { firstJob, Job, unemployed } from "./job";
+import { Job, unemployed } from "./job";
 import Background from "./assets/background.png";
 import JobPanel from "./components/Job";
 
 export interface MoneyState {
   balance: number;
   passiveIncome: number;
-  activeIncome: number;
+  activeIncome: [number, number];
   rent: number;
   foodCost: number;
   bills: number;
@@ -39,15 +39,15 @@ export interface GameState {
 }
 
 export interface WorkState {
-  totalWorkCount: number,
-  currentJobWorkCount: number
+  totalWorkCount: number;
+  currentJobWorkCount: number;
 }
 
 export interface CombinedState {
-  moneyState: MoneyState,
-  playerState: PlayerState,
-  gameState: GameState,
-  workState: WorkState
+  moneyState: MoneyState;
+  playerState: PlayerState;
+  gameState: GameState;
+  workState: WorkState;
 }
 
 export interface Action {
@@ -76,7 +76,7 @@ const App = () => {
   const [moneyState, setMoneyState] = React.useState<MoneyState>({
     balance: Constants.STARTING_BALANCE,
     passiveIncome: 0,
-    activeIncome: 0,
+    activeIncome: [0, 0],
     rent: Constants.STARTING_RENT,
     foodCost: Constants.STARTING_FOOD_COST,
     bills: Constants.STARTING_BILLS,
@@ -97,7 +97,7 @@ const App = () => {
 
   const [workState, setWorkState] = React.useState<WorkState>({
     totalWorkCount: 0,
-    currentJobWorkCount: 0
+    currentJobWorkCount: 0,
   });
 
   const [messages, setMessages] = React.useState<string[]>([
@@ -120,9 +120,9 @@ const App = () => {
       moneyState,
       playerState,
       gameState,
-      workState
-    }
-  }
+      workState,
+    };
+  };
 
   const updateState = () => {
     setMoneyState({
@@ -152,7 +152,7 @@ const App = () => {
         }'s Expenses.`,
         {
           duration: 5000,
-          position: "top-left"
+          position: "top-left",
         }
       );
 
@@ -249,9 +249,13 @@ const App = () => {
   };
 
   const handleWorkButtonPress = () => {
+    const gain =
+      moneyState.activeIncome[0] +
+      Math.round(Math.random() * (moneyState.activeIncome[1] - moneyState.activeIncome[0]));
+
     setMoneyState({
       ...moneyState,
-      balance: moneyState.balance + moneyState.activeIncome,
+      balance: moneyState.balance + gain,
     });
 
     setPlayerState({
@@ -265,12 +269,11 @@ const App = () => {
     setWorkState({
       ...workState,
       totalWorkCount: workState.totalWorkCount + 1,
-      currentJobWorkCount: workState.currentJobWorkCount + 1
-    })
+      currentJobWorkCount: workState.currentJobWorkCount + 1,
+    });
   };
 
   const handlePromotion = (promotion: Job) => {
-
     const response = promotion.apply(combinedState());
 
     if (response.result) {
@@ -278,16 +281,19 @@ const App = () => {
         ...playerState,
         job: promotion,
       });
-  
+
       setMoneyState({
         ...moneyState,
         activeIncome: promotion.activeIncome,
         passiveIncome: promotion.passiveIncome,
       });
 
-      toast(`You've been prompted to ${promotion.name}`)
+      toast(`You've been prompted to ${promotion.name}`);
     } else {
-      toast(response.message ?? "You don't appear to be qualified for that position!");
+      toast(
+        response.message ??
+          "You don't appear to be qualified for that position!"
+      );
     }
   };
 
@@ -320,13 +326,11 @@ const App = () => {
               workButtonCallback={handleWorkButtonPress}
             ></WorkButton>
             <Energy currentEnergy={playerState.energy}></Energy>
-            {playerState.job.promotion && (
-              <JobPanel
-                job={playerState.job}
-                avaliablePromotion={playerState.job.promotion!}
-                promotionCallback={handlePromotion}
-              ></JobPanel>
-            )}
+            <JobPanel
+              job={playerState.job}
+              avaliablePromotion={playerState.job.promotion!}
+              promotionCallback={handlePromotion}
+            ></JobPanel>
           </div>
         </div>
         <div className="bg-gray-200 bg-opacity-10 shadow-md">
